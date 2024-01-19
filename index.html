@@ -8,10 +8,28 @@
     <title>Vite + TS</title>
   </head>
   <body>
-    <div id="app">
+    <div id="app" class="app">
       <div id="puntuacion-jugador"></div>
+      <section class="mesa">       
+          <img
+            class="carta"
+            src="https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/back.jpg"
+            alt="Carta Boca Abajo"
+            />
+            <div id="cartas-jugador" class="cartas-jugador"></div>
+      </section>
       <div class="botones">
         <button id="pedir-carta">Pedir Carta</button>
+        <button id="me-planto">Me planto</button>
+        <button id="reiniciar2">Reiniciar Juego</button>
+      </div>
+      <div id="mensaje-juego"></div>
+      <div id="game-over" class="game-over hidden">
+        <div>
+          <h2>Game Over</h2>
+          <button id="reiniciar">Reiniciar Juego</button>
+        </div>
+      </div>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
