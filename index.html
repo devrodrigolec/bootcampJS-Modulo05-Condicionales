@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="app" class="app">
-      <div id="puntuacion-jugador"></div>
+      <div id="puntuacion-jugador" class="puntuacion-jugador"></div>
       <section class="mesa">       
           <img
             class="carta"
@@ -17,17 +17,19 @@
             alt="Carta Boca Abajo"
             />
             <div id="cartas-jugador" class="cartas-jugador"></div>
+            <div id="si-hubieras-seguido"></div>
       </section>
       <div class="botones">
         <button id="pedir-carta">Pedir Carta</button>
         <button id="me-planto">Me planto</button>
-        <button id="reiniciar2">Reiniciar Juego</button>
+        <button id="reiniciar">Reiniciar Juego</button>
+        <button id="si-hubieras-seguido-boton" disabled>Si hubieras seguido...</button>
       </div>
-      <div id="mensaje-juego"></div>
+      <div id="mensaje-juego" class="mensaje-juego"></div>
       <div id="game-over" class="game-over hidden">
         <div>
           <h2>Game Over</h2>
-          <button id="reiniciar">Reiniciar Juego</button>
+          <button id="reiniciar-game-over">Reiniciar Juego</button>
         </div>
       </div>
       </div>

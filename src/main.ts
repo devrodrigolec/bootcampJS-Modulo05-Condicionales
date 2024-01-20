@@ -2,10 +2,14 @@ const puntuacionDiv = document.getElementById("puntuacion-jugador");
 const pedirCartaBoton = document.getElementById("pedir-carta");
 const cartasJugadorDiv = document.getElementById("cartas-jugador");
 const gameOverDiv = document.getElementById("game-over");
+const reiniciarBotonGameOver = document.getElementById("reiniciar-game-over");
 const reiniciarBoton = document.getElementById("reiniciar");
-const reiniciarBoton2= document.getElementById("reiniciar2");
 const mePlantoBoton = document.getElementById("me-planto");
 const mensajeJuevoDiv = document.getElementById("mensaje-juego");
+const siHubieraSeguidoDiv = document.getElementById("si-hubieras-seguido");
+const siHubierasSeguidoBoton = document.getElementById(
+  "si-hubieras-seguido-boton"
+);
 let puntuacionJugador: number = 0;
 
 const pedirCarta = (): number => {
@@ -19,7 +23,7 @@ const mostrarPuntuacion = (): void => {
   }
 };
 
-const mostrarCarta = (carta: number): void => {
+const mostrarCarta = (carta: number, htmlDiv: HTMLElement): void => {
   let cartaHTML: string = "";
   switch (carta) {
     case 1:
@@ -61,7 +65,8 @@ const mostrarCarta = (carta: number): void => {
     cartaImg.src = `https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/${cartaHTML}-copas.jpg`;
     cartaImg.alt = "carta del juego";
     cartaImg.classList.add("carta-jugador");
-    cartasJugadorDiv.append(cartaImg);
+    cartaImg.classList.add("carta");
+    htmlDiv.append(cartaImg);
   }
 };
 
@@ -86,21 +91,31 @@ const reiniciarJuego = (): void => {
   if (gameOverDiv) {
     gameOverDiv.classList.add("hidden");
   }
-  if (cartasJugadorDiv) {
+  if (cartasJugadorDiv && siHubieraSeguidoDiv) {
     cartasJugadorDiv.innerHTML = "";
+    siHubieraSeguidoDiv.innerHTML = "";
   }
   puntuacionJugador = 0;
   mostrarPuntuacion();
-  if(pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
+  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
     pedirCartaBoton.disabled = false;
   }
-  if(mensajeJuevoDiv) {
-    mensajeJuevoDiv.innerHTML = ''
+  if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
+    mePlantoBoton.disabled = false;
+  }
+  if (
+    siHubierasSeguidoBoton &&
+    siHubierasSeguidoBoton instanceof HTMLButtonElement
+  ) {
+    siHubierasSeguidoBoton.disabled = true;
+  }
+  if (mensajeJuevoDiv) {
+    mensajeJuevoDiv.innerHTML = "";
   }
 };
 
-const mePlanto = (puntuacionJugador : number): void => {
-  let mensaje : string = '';
+const mePlanto = (puntuacionJugador: number): void => {
+  let mensaje: string = "";
   if (puntuacionJugador <= 4) {
     mensaje = "Has sido muy conservador....";
   }
@@ -116,7 +131,13 @@ const mePlanto = (puntuacionJugador : number): void => {
 
   if (mensajeJuevoDiv && mensaje.length > 0) {
     mensajeJuevoDiv.innerHTML = mensaje;
- 
+  }
+};
+
+const siHubierasSeguido = (): void => {
+  const carta: number = pedirCarta();
+  if (siHubieraSeguidoDiv) {
+    mostrarCarta(carta, siHubieraSeguidoDiv);
   }
 };
 
@@ -124,24 +145,44 @@ if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
   pedirCartaBoton.addEventListener("click", () => {
     const carta: number = pedirCarta();
     calcularPuntuacion(carta);
-    mostrarCarta(carta);
+    if (cartasJugadorDiv) {
+      mostrarCarta(carta, cartasJugadorDiv);
+    }
     gameOver(puntuacionJugador);
   });
 }
 
+document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
+
+if (
+  reiniciarBotonGameOver &&
+  reiniciarBotonGameOver instanceof HTMLButtonElement
+) {
+  reiniciarBotonGameOver.addEventListener("click", reiniciarJuego);
+}
 if (reiniciarBoton && reiniciarBoton instanceof HTMLButtonElement) {
   reiniciarBoton.addEventListener("click", reiniciarJuego);
-}
-if (reiniciarBoton2 && reiniciarBoton2 instanceof HTMLButtonElement) {
-  reiniciarBoton2.addEventListener("click", reiniciarJuego);
-  
 }
 if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
   mePlantoBoton.addEventListener("click", () => {
     mePlanto(puntuacionJugador);
-    if(pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
+    if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
       pedirCartaBoton.disabled = true;
+    }
+    if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
+      mePlantoBoton.disabled = true;
+    }
+    if (
+      siHubierasSeguidoBoton &&
+      siHubierasSeguidoBoton instanceof HTMLButtonElement
+    ) {
+      siHubierasSeguidoBoton.disabled = false;
     }
   });
 }
-document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
+if (
+  siHubierasSeguidoBoton &&
+  siHubierasSeguidoBoton instanceof HTMLButtonElement
+) {
+  siHubierasSeguidoBoton.addEventListener("click", siHubierasSeguido);
+}
