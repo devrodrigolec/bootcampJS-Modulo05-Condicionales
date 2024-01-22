@@ -233,6 +233,9 @@ const siHubierasSeguido = (): void => {
   if (siHubieraSeguidoDiv && siHubieraSeguidoDiv instanceof HTMLDivElement) {
     mostrarCarta(carta, siHubieraSeguidoDiv);
   }
+  if(siHubierasSeguidoBoton && siHubierasSeguidoBoton instanceof HTMLButtonElement){
+    desactivarBoton(siHubierasSeguidoBoton);
+  }
 };
 
 const handlePedirCarta = (): void => {
