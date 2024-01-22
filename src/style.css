@@ -31,6 +31,9 @@
   width: 50%;
   
 }
+.si-hubieras-seguido{
+  min-width: 20%
+}
 .game-over{
   display: flex;
   flex-direction: column;  
