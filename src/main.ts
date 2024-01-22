@@ -12,78 +12,106 @@ const siHubierasSeguidoBoton = document.getElementById(
 );
 let puntuacionJugador: number = 0;
 
-const pedirCarta = (): number => {
-  const numero = Math.ceil(Math.random() * 10);
-  return numero > 7 ? numero + 2 : numero;
+const obtenerNumeroRandom = (): number => {
+  return Math.ceil(Math.random() * 10);
 };
 
-const mostrarPuntuacion = (): void => {
-  if (puntuacionDiv) {
+const obtenerNumerodeCarta = (numeroRandom: number): number => {
+  return numeroRandom > 7 ? numeroRandom + 2 : numeroRandom;
+};
+
+const mostrarPuntuacion = (puntuacionJugador : number): void => {
+  if (puntuacionDiv && puntuacionDiv instanceof HTMLDivElement) {
     puntuacionDiv.innerHTML = `Puntuación Jugador: ${puntuacionJugador} puntos`;
   }
 };
 
-const mostrarCarta = (carta: number, htmlDiv: HTMLElement): void => {
-  let cartaHTML: string = "";
+const formatearURLDeCarta = (carta: number): string => {
+  let cartaString: string = "";
   switch (carta) {
     case 1:
-      cartaHTML = "1_as";
+      cartaString = "1_as";
       break;
     case 2:
-      cartaHTML = "2_dos";
+      cartaString = "2_dos";
       break;
     case 3:
-      cartaHTML = "3_tres";
+      cartaString = "3_tres";
       break;
     case 4:
-      cartaHTML = "4_cuatro";
+      cartaString = "4_cuatro";
       break;
     case 5:
-      cartaHTML = "5_cinco";
+      cartaString = "5_cinco";
       break;
     case 6:
-      cartaHTML = "6_seis";
+      cartaString = "6_seis";
       break;
     case 7:
-      cartaHTML = "7_siete";
+      cartaString = "7_siete";
       break;
     case 10:
-      cartaHTML = "10_sota";
+      cartaString = "10_sota";
       break;
     case 11:
-      cartaHTML = "11_caballo";
+      cartaString = "11_caballo";
       break;
     case 12:
-      cartaHTML = "12_rey";
+      cartaString = "12_rey";
       break;
     default:
-      cartaHTML = "Error xD";
+      cartaString = "Error xD";
   }
 
-  if (cartasJugadorDiv) {
+  const URLdeCarta = `https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/${cartaString}-copas.jpg`;
+
+  return URLdeCarta;
+};
+
+const crearCartaEnHTML = (URLDeCarta: string, htmlDiv: HTMLElement) => {
+  if (cartasJugadorDiv && cartasJugadorDiv instanceof HTMLDivElement) {
     const cartaImg = document.createElement("img");
-    cartaImg.src = `https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/${cartaHTML}-copas.jpg`;
+    cartaImg.src = URLDeCarta;
     cartaImg.alt = "carta del juego";
     cartaImg.classList.add("carta-jugador");
     cartaImg.classList.add("carta");
-    htmlDiv.append(cartaImg);
-  }
-};
-
-const calcularPuntuacion = (carta: number): void => {
-  if (carta > 7) {
-    puntuacionJugador = puntuacionJugador + 0.5;
-  } else {
-    puntuacionJugador = puntuacionJugador + carta;
-  }
-  mostrarPuntuacion();
-};
-
-const gameOver = (puntuacionJugador: number): void => {
-  if (puntuacionJugador > 7.5) {
-    if (gameOverDiv) {
-      gameOverDiv.classList.remove("hidden");
+    if (htmlDiv && htmlDiv instanceof HTMLDivElement) {
+      htmlDiv.append(cartaImg);
     }
+  }
+};
+
+const mostrarCarta = (carta: number, htmlDiv: HTMLElement): void => {
+  const cartaURL = formatearURLDeCarta(carta);
+  if (htmlDiv && htmlDiv instanceof HTMLElement) {
+    crearCartaEnHTML(cartaURL, htmlDiv);
+  }
+};
+
+const calcularPuntuacion = (carta: number): number => {
+  const puntuacion = carta > 7 ? 0.5 : carta;
+  return puntuacion;
+};
+
+const sumarPuntuaciónJugador = (puntuacion: number): void => {
+  puntuacionJugador = puntuacionJugador + puntuacion;
+};
+
+const gameOver = (): void => {
+  if (gameOverDiv && gameOverDiv instanceof HTMLDivElement) {
+    gameOverDiv.classList.remove("hidden");
+  }
+};
+
+const desactivarBoton = (boton: HTMLElement): void => {
+  if (boton && boton instanceof HTMLButtonElement) {
+    boton.disabled = true;
+  }
+};
+
+const activarBoton = (boton: HTMLElement): void => {
+  if (boton && boton instanceof HTMLButtonElement) {
+    boton.disabled = false;
   }
 };
 
@@ -96,25 +124,23 @@ const reiniciarJuego = (): void => {
     siHubieraSeguidoDiv.innerHTML = "";
   }
   puntuacionJugador = 0;
-  mostrarPuntuacion();
-  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
-    pedirCartaBoton.disabled = false;
+  mostrarPuntuacion(puntuacionJugador);
+
+  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLElement) {
+    activarBoton(pedirCartaBoton);
   }
-  if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
-    mePlantoBoton.disabled = false;
+  if (mePlantoBoton && mePlantoBoton instanceof HTMLElement) {
+    activarBoton(mePlantoBoton);
   }
-  if (
-    siHubierasSeguidoBoton &&
-    siHubierasSeguidoBoton instanceof HTMLButtonElement
-  ) {
-    siHubierasSeguidoBoton.disabled = true;
+  if (siHubierasSeguidoBoton && siHubierasSeguidoBoton instanceof HTMLElement) {
+    desactivarBoton(siHubierasSeguidoBoton);
   }
-  if (mensajeJuevoDiv) {
-    mensajeJuevoDiv.innerHTML = "";
+  if (mensajeJuevoDiv && mensajeJuevoDiv instanceof HTMLDivElement) {
+    mostrarMensajeAJugador("");
   }
 };
 
-const mePlanto = (puntuacionJugador: number): void => {
+const obtenerMensajeDeMePlanto = (puntuacionJugador: number): string => {
   let mensaje: string = "";
   if (puntuacionJugador <= 4) {
     mensaje = "Has sido muy conservador....";
@@ -129,60 +155,27 @@ const mePlanto = (puntuacionJugador: number): void => {
     mensaje = "¡Lo has clavado! ¡Enhorabuena!";
   }
 
-  if (mensajeJuevoDiv && mensaje.length > 0) {
+  return mensaje;
+};
+
+const mostrarMensajeAJugador = (mensaje: string): void => {
+  if (mensajeJuevoDiv && mensajeJuevoDiv instanceof HTMLDivElement) {
     mensajeJuevoDiv.innerHTML = mensaje;
   }
 };
 
 const siHubierasSeguido = (): void => {
-  const carta: number = pedirCarta();
+  const numeroRandom = obtenerNumeroRandom();
+  const carta: number = obtenerNumerodeCarta(numeroRandom);
   if (siHubieraSeguidoDiv) {
     mostrarCarta(carta, siHubieraSeguidoDiv);
   }
 };
 
-if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
-  pedirCartaBoton.addEventListener("click", () => {
-    const carta: number = pedirCarta();
-    calcularPuntuacion(carta);
-    if (cartasJugadorDiv) {
-      mostrarCarta(carta, cartasJugadorDiv);
-    }
-    gameOver(puntuacionJugador);
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarPuntuacion(puntuacionJugador)
+});
 
-document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
+const gestionarJuego = (): void => {
 
-if (
-  reiniciarBotonGameOver &&
-  reiniciarBotonGameOver instanceof HTMLButtonElement
-) {
-  reiniciarBotonGameOver.addEventListener("click", reiniciarJuego);
-}
-if (reiniciarBoton && reiniciarBoton instanceof HTMLButtonElement) {
-  reiniciarBoton.addEventListener("click", reiniciarJuego);
-}
-if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
-  mePlantoBoton.addEventListener("click", () => {
-    mePlanto(puntuacionJugador);
-    if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
-      pedirCartaBoton.disabled = true;
-    }
-    if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
-      mePlantoBoton.disabled = true;
-    }
-    if (
-      siHubierasSeguidoBoton &&
-      siHubierasSeguidoBoton instanceof HTMLButtonElement
-    ) {
-      siHubierasSeguidoBoton.disabled = false;
-    }
-  });
-}
-if (
-  siHubierasSeguidoBoton &&
-  siHubierasSeguidoBoton instanceof HTMLButtonElement
-) {
-  siHubierasSeguidoBoton.addEventListener("click", siHubierasSeguido);
-}
+};
