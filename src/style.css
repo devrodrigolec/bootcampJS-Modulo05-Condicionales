@@ -25,6 +25,12 @@
 .carta-jugador {
   margin-left: -120px;
 }
+.cartas-jugador {
+  display: flex;
+  justify-content: flex-start;
+  width: 50%;
+  
+}
 .game-over{
   display: flex;
   flex-direction: column;  
