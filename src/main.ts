@@ -261,7 +261,6 @@ const gestionarJuego = (): void => {
   handlePedirCarta();
   handleMePlanto();
   handleReiniciarJuego();
-  handleReiniciarJuego();
   handleSiHubierasSeguido();
 };
 
