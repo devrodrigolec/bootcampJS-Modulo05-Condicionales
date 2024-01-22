@@ -1,15 +1,19 @@
 const puntuacionDiv = document.getElementById("puntuacion-jugador");
-const pedirCartaBoton = document.getElementById("pedir-carta");
+const pedirCartaBoton = document.getElementById(
+  "pedir-carta"
+) as HTMLButtonElement;
 const cartasJugadorDiv = document.getElementById("cartas-jugador");
 const gameOverDiv = document.getElementById("game-over");
 const reiniciarBotonGameOver = document.getElementById("reiniciar-game-over");
-const reiniciarBoton = document.getElementById("reiniciar");
-const mePlantoBoton = document.getElementById("me-planto");
+const reiniciarBoton = document.getElementById(
+  "reiniciar"
+) as HTMLButtonElement;
+const mePlantoBoton = document.getElementById("me-planto") as HTMLButtonElement;
 const mensajeJuevoDiv = document.getElementById("mensaje-juego");
 const siHubieraSeguidoDiv = document.getElementById("si-hubieras-seguido");
 const siHubierasSeguidoBoton = document.getElementById(
   "si-hubieras-seguido-boton"
-);
+) as HTMLButtonElement;
 let puntuacionJugador: number = 0;
 
 const obtenerNumeroRandom = (): number => {
@@ -20,7 +24,7 @@ const obtenerNumerodeCarta = (numeroRandom: number): number => {
   return numeroRandom > 7 ? numeroRandom + 2 : numeroRandom;
 };
 
-const mostrarPuntuacion = (puntuacionJugador : number): void => {
+const mostrarPuntuacion = (puntuacionJugador: number): void => {
   if (puntuacionDiv && puntuacionDiv instanceof HTMLDivElement) {
     puntuacionDiv.innerHTML = `Puntuación Jugador: ${puntuacionJugador} puntos`;
   }
@@ -97,28 +101,32 @@ const sumarPuntuaciónJugador = (puntuacion: number): void => {
   puntuacionJugador = puntuacionJugador + puntuacion;
 };
 
-const gameOver = (): void => {
+const checkGameOver = (): void => {
+  if (puntuacionJugador > 7.5) {
+    MostrarGameOver();
+  }
+};
+
+const MostrarGameOver = (): void => {
   if (gameOverDiv && gameOverDiv instanceof HTMLDivElement) {
     gameOverDiv.classList.remove("hidden");
   }
 };
 
-const desactivarBoton = (boton: HTMLElement): void => {
-  if (boton && boton instanceof HTMLButtonElement) {
-    boton.disabled = true;
+const ocultarGameOver = (): void => {
+  if (gameOverDiv && gameOverDiv instanceof HTMLDivElement) {
+    gameOverDiv.classList.add("hidden");
   }
 };
+const desactivarBoton = (boton: HTMLButtonElement): void => {
+  boton.disabled = true;
+};
 
-const activarBoton = (boton: HTMLElement): void => {
-  if (boton && boton instanceof HTMLButtonElement) {
-    boton.disabled = false;
-  }
+const activarBoton = (boton: HTMLButtonElement): void => {
+  boton.disabled = false;
 };
 
 const reiniciarJuego = (): void => {
-  if (gameOverDiv) {
-    gameOverDiv.classList.add("hidden");
-  }
   if (cartasJugadorDiv && siHubieraSeguidoDiv) {
     cartasJugadorDiv.innerHTML = "";
     siHubieraSeguidoDiv.innerHTML = "";
@@ -172,10 +180,89 @@ const siHubierasSeguido = (): void => {
   }
 };
 
+const handlePedirCarta = (): void => {
+  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
+    pedirCartaBoton.addEventListener("click", (): void => {
+      const numeroRandom: number = obtenerNumeroRandom();
+      const carta: number = obtenerNumerodeCarta(numeroRandom);
+      const puntuacion = calcularPuntuacion(carta);
+      sumarPuntuaciónJugador(puntuacion);
+      mostrarPuntuacion(puntuacionJugador);
+      if (cartasJugadorDiv && cartasJugadorDiv instanceof HTMLDivElement) {
+        mostrarCarta(carta, cartasJugadorDiv);
+      }
+      checkGameOver();
+    });
+  }
+};
+
+const handleMePlanto = (): void => {
+  if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
+    mePlantoBoton.addEventListener("click", (): void => {
+      if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
+        desactivarBoton(pedirCartaBoton);
+      }
+      if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
+        desactivarBoton(mePlantoBoton);
+      }
+      if (
+        siHubierasSeguidoBoton &&
+        siHubierasSeguidoBoton instanceof HTMLButtonElement
+      ) {
+        activarBoton(siHubierasSeguidoBoton);
+      }
+      const mensajeAJugador = obtenerMensajeDeMePlanto(puntuacionJugador);
+      mostrarMensajeAJugador(mensajeAJugador);
+    });
+  }
+};
+
+const handleReiniciarJuego = (): void => {
+  if (
+    reiniciarBotonGameOver &&
+    reiniciarBotonGameOver instanceof HTMLButtonElement
+  ) {
+    reiniciarBotonGameOver.addEventListener("click", () => {
+      ocultarGameOver();
+      reiniciarJuego();
+    });
+  }
+
+  if (reiniciarBoton && reiniciarBoton instanceof HTMLButtonElement) {
+    reiniciarBoton.addEventListener("click", (): void => {
+      reiniciarJuego();
+    });
+  }
+};
+
+const handleSiHubierasSeguido = () => {
+  if (
+    siHubierasSeguidoBoton &&
+    siHubierasSeguidoBoton instanceof HTMLButtonElement
+  ) {
+    siHubierasSeguidoBoton.addEventListener("click", () => {
+      const numeroRandom: number = obtenerNumeroRandom();
+      const carta: number = obtenerNumerodeCarta(numeroRandom);
+      if (
+        siHubieraSeguidoDiv &&
+        siHubieraSeguidoDiv instanceof HTMLDivElement
+      ) {
+        mostrarCarta(carta, siHubieraSeguidoDiv);
+      }
+    });
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
-  mostrarPuntuacion(puntuacionJugador)
+  mostrarPuntuacion(puntuacionJugador);
 });
 
 const gestionarJuego = (): void => {
-
+  handlePedirCarta();
+  handleMePlanto();
+  handleReiniciarJuego();
+  handleReiniciarJuego();
+  handleSiHubierasSeguido();
 };
+
+gestionarJuego();
