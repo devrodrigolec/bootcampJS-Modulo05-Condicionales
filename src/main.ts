@@ -75,6 +75,7 @@ const crearCartaEnHTML = (URLDeCarta: string, htmlDiv: HTMLElement) => {
     cartaImg.alt = "carta del juego";
     cartaImg.classList.add("carta-jugador");
     cartaImg.classList.add("carta");
+    cartaImg.classList.add("slide-in-blurred-left");
     if (htmlDiv && htmlDiv instanceof HTMLDivElement) {
       htmlDiv.append(cartaImg);
     }
@@ -283,5 +284,5 @@ const gestionarJuego = (): void => {
 
 document.addEventListener("DOMContentLoaded", () => {
   mostrarPuntuacion(puntuacionJugador);
-  gestionarJuego();
+  gestionarJuego(); 
 });
