@@ -136,14 +136,14 @@ const activarBoton = (boton: HTMLButtonElement): void => {
   boton.disabled = false;
 };
 
-const reiniciarJuego = (): void => {
+const vaciarMesaDeCartas = (): void => {
   if (cartasJugadorDiv && siHubieraSeguidoDiv) {
     cartasJugadorDiv.innerHTML = "";
     siHubieraSeguidoDiv.innerHTML = "";
   }
-  puntuacionJugador = 0;
-  mostrarPuntuacion(puntuacionJugador);
+};
 
+const gestionarBotonesReiniciarJuego = (): void => {
   if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
     activarBoton(pedirCartaBoton);
   }
@@ -156,6 +156,28 @@ const reiniciarJuego = (): void => {
   ) {
     desactivarBoton(siHubierasSeguidoBoton);
   }
+};
+
+const gestionarBotonesMePlanto = (): void => {
+  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
+    desactivarBoton(pedirCartaBoton);
+  }
+  if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
+    desactivarBoton(mePlantoBoton);
+  }
+  if (
+    siHubierasSeguidoBoton &&
+    siHubierasSeguidoBoton instanceof HTMLButtonElement
+  ) {
+    activarBoton(siHubierasSeguidoBoton);
+  }
+}
+
+const reiniciarJuego = (): void => {
+  puntuacionJugador = 0;
+  mostrarPuntuacion(puntuacionJugador);
+  vaciarMesaDeCartas();
+  gestionarBotonesReiniciarJuego();
   if (mensajeJuevoDiv && mensajeJuevoDiv instanceof HTMLDivElement) {
     mostrarMensajeAJugador("");
   }
@@ -186,8 +208,6 @@ const mostrarMensajeAJugador = (mensaje: string): void => {
   }
 };
 
-
-
 const pedirCarta = (): void => {
   const numeroRandom: number = obtenerNumeroRandom();
   const carta: number = obtenerNumerodeCarta(numeroRandom);
@@ -202,18 +222,7 @@ const pedirCarta = (): void => {
 };
 
 const mePlanto = (): void => {
-  if (pedirCartaBoton && pedirCartaBoton instanceof HTMLButtonElement) {
-    desactivarBoton(pedirCartaBoton);
-  }
-  if (mePlantoBoton && mePlantoBoton instanceof HTMLButtonElement) {
-    desactivarBoton(mePlantoBoton);
-  }
-  if (
-    siHubierasSeguidoBoton &&
-    siHubierasSeguidoBoton instanceof HTMLButtonElement
-  ) {
-    activarBoton(siHubierasSeguidoBoton);
-  }
+  gestionarBotonesMePlanto();
   const mensajeAJugador = obtenerMensajeDeMePlanto(puntuacionJugador);
   mostrarMensajeAJugador(mensajeAJugador);
 };
@@ -262,11 +271,6 @@ const handleSiHubierasSeguido = () => {
     siHubierasSeguidoBoton.addEventListener("click", siHubierasSeguido);
   }
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-  mostrarPuntuacion(puntuacionJugador);
-});
-
 const gestionarJuego = (): void => {
   handlePedirCarta();
   handleMePlanto();
@@ -274,4 +278,7 @@ const gestionarJuego = (): void => {
   handleSiHubierasSeguido();
 };
 
-gestionarJuego();
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarPuntuacion(puntuacionJugador);
+  gestionarJuego();
+});
